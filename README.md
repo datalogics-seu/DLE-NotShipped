@@ -15,3 +15,5 @@ APDFL DLE (mostly C#) samples -- Derived from demos, blogs or other sources
 ** PDFOptimizerSampleByteArray.java - Optimization sample that reads/writes to a byte array and uses ByteArrayInputStream and ByteArrayOutputStream.  To construct the ImageInputStream/ImageOutputStream requires v15.0.4 and higher. Place in \samples\PDFOptimizerSample folder.
  
  ** RepeatingFormXObject.cs - Sample creates a Form object to hold boilerplate content that needs to be repeated on each page; and adds unique content on top for each page. For use with account statements, credit card statements, etc. Creates from 1 to N unique pages. Place in \Sample_Source\ContentCreation\RepeatingFormXObject folder.  Uses DuckyAccountStatement.pdf as the source template
+
+** SplitPDFVariations.cs - Sample that demonstrates splitting a PDF document based on page intervals or bookmarks or by hits on key search strings.  v15.0.4 and higher.  From the blog article https://gist.github.com/datalogics-seu/4e62fd26ffcb82a30bf2458110e4b341#file-splitpdfvariations-cs
