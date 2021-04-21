@@ -8,6 +8,9 @@ APDFL DLE (mostly C#) samples -- Derived from demos, blogs or other sources
 
 ** ConvertTextToOutlines.cs - "Tricks" APDFL into converting all text to outlines by adding a small translucent element to each page and then calling the flattener with the "UseTextOutlines" option (equivalent to the Acrobat -> Flattener Preview "Convert All Text To Outlines" ).  v15.0.4 and higher. Place in \Sample_Source\ModifyContent\
 
+** FlattenAnnotations.cs - Converts annotation appearance streams to page content. Note: Output not exactly the same; might need to be transparency flattened?
+v18.0.3 and higher. Place in \Sample_Source\Annotations
+
 ** FormWalker.cs - Walks through AcroForm field of a PDF, describing the widget annotation properties (should work for statix XFA too). PGallot sample, updated with a bit more info on signature fields.  v15.0.4 and higher. Place in \Sample_Source\InformationExtraction\FormWalker
 
 ** ModifyLinkAnnotDests.cs - Walk through the link annots and change the JS or URI Actions that contain the destination URL.   v15.0.4 and higher. Place in \Sample_Source\ContentModification\ModifyLinkAnnotDests
