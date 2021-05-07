@@ -1,6 +1,6 @@
 # DLE-notshipped
 
-APDFL DLE (mostly C#) samples -- Derived from demos, blogs or other sources
+APDFL DLE (mostly CSharp) samples -- Derived from demos, blogs or other sources
 
 ** AddTextToDocument-WithTimer.cs - Tests performance/speed of the OCRParams Performance options (Default vs. Faster vs. MoreAccuracy vs. BestAccuracy).  Unscientific test showed that the Faster option took 25%-50% of the elapsed time of BestAccuracy. v15.0.4 and higher. Place in \Sample_Source\OpticalCharacterRecognition\AddTextToDocumentWithTimer
 
@@ -11,7 +11,7 @@ APDFL DLE (mostly C#) samples -- Derived from demos, blogs or other sources
 ** FlattenAnnotations.cs - Converts annotation appearance streams to page content. Note: Output not exactly the same; might need to be transparency flattened?
 v18.0.3 and higher. Place in \Sample_Source\Annotations
 
-** FormWalker.cs - Walks through AcroForm field of a PDF, describing the widget annotation properties (should work for statix XFA too). PGallot sample, updated with a bit more info on signature fields.  v15.0.4 and higher. Place in \Sample_Source\InformationExtraction\FormWalker
+** FormWalker.cs - Walks through AcroForm field of a PDF, describing the widget annotation properties (should work for static XFA too). PGallot sample, updated with a bit more info on signature fields.  v15.0.4 and higher. Place in \Sample_Source\InformationExtraction\FormWalker
 
 ** ModifyLinkAnnotDests.cs - Walk through the link annots and change the JS or URI Actions that contain the destination URL.   v15.0.4 and higher. Place in \Sample_Source\ContentModification\ModifyLinkAnnotDests
 
