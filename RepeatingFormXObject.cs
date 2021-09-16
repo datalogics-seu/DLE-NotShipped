@@ -5,11 +5,12 @@ using System.Diagnostics;
 using Datalogics.PDFL;
 
 /*
- * The RepeatingFormXObject sample program creates a new PDF file, creating a Form object to hold 
- * any boilerplate content that needs to be repeated on each page.  Unique content on top
- * The Form object is a representation
- * of a Form XObject in the PDF Document (not to be confused with an AcroForm)
- * .
+ * The RepeatingFormXObject sample is a demonstration of creating a large volume of PDF pages to for an invoicing 
+ * or customer statement type of application.  In this sample, some of the content is static and has fixed positions.
+ * The sample imports a tempate PDF and creates a Form object to hold that boilerplate content that needs to be repeated 
+ * on each page.  Unique content is then added on top. 
+ * The Form object is a representation of a PDF Form XObject (not to be confused with an AcroForm)
+ * 
  * 
  * Copyright (c) 2007-2020, Datalogics, Inc. All rights reserved.
  *
@@ -21,6 +22,9 @@ using Datalogics.PDFL;
 namespace RepeatingFormXObject
 {
 
+    // public string customerInfoFont = "Garamond";
+    // public duble ptSize = "10.0";
+
     // Structure to hold the customer data. Expand as needed
     public struct customerInfo
     {
@@ -31,18 +35,43 @@ namespace RepeatingFormXObject
         public string zip;
         public string phone;
 
-        public customerInfo(string cName, string addr, string ci, string st, string z, string ph)
-        {
-            name = cName;
-            address = addr;
-            city = ci;
-            state = st;
-            zip = z;
-            phone = ph;
+        // position data.  Assume it is fixed positions,  per template. 
+        public double name_x;
+        public double name_y;
+        public double address_x;
+        public double address_y;
+        public double city_x;
+        public double city_y;
+        public double zip_x;
+        public double zip_y;
+        public double phone_x;
+        public double phone_y;
+
+        public customerInfo(string name, string address, string city, string state, string zip, string phone)
+       {
+            this.name = name;
+            this.address = address;
+            this.city = city;
+            this.state = state;
+            this.zip = zip;
+            this.phone = phone;
+
+            // Assume that the customer info data pieces are located at fixed positions, per template.
+            // For the ducky template, the x,y coordinates are ( PDF origin is at the lower left):
+            this.name_x = 120;
+            this.name_y = 649;
+            this.address_x = 120;
+            this.address_y = 635;
+            this.city_x = 120;
+            this.city_y = 621;
+            this.zip_x = 120;
+            this.zip_y = 621; // City, State and Zip are all on the same line, concatenated, so this is not needed.
+            this.phone_x = 120;
+            this.phone_y = 607;
         }
     }
-    // Structure to hold the statement data. Expand as needed
-    public struct statementData
+    // Structure to hold the transaction data. Expand as needed
+    public struct transactionData
     {
         public string date;
         public string description;
@@ -50,13 +79,19 @@ namespace RepeatingFormXObject
         public double credit;
         public double balance;
 
-        public statementData(string d, string desc, double ch, double cr, double bal)
+        //public double pos_x;
+        //public double pos_y;
+
+        public transactionData(string date, string description, double charges, double credit, double balance)
         {
-            date = d;
-            description = desc;
-            charges = ch;
-            credit = cr;
-            balance = bal;
+            this.date = date;
+            this.description = description;
+            this.charges = charges;
+            this.credit = credit;
+            this.balance = balance;
+
+            //this.pos_x = pos_x;
+            //this.pos_y = pos_y;
         }
     }
     class RepeatingForm
@@ -65,14 +100,26 @@ namespace RepeatingFormXObject
         {
             Console.WriteLine("RepeatingFormXObject Sample:");
 
-            // Insert some data.  We could read this from an excel file or XML or other source, but for
-            // this sample, we will just insert it here.
+            int repeatMax = 100;  // Record count...
+            string customerInfoFont = "Garamond";
+            double customerInfoPointSize = 10.0;
+            string transactionDataFont = "Arial";
+            double transactionDataPointSize = 10.0;
+            double transactionData_xPos = 0;
+            double transactionData_yStartPos = 0;
+            double transactionData_leading = 27;
+            double transactionData_count = 0;
+
+
+            // Populate some customer transaction data.  This could be read from a CSV or XML file or other source, one per customer. 
+            // But for this sample, we will just insert it here.
+            // Could pass in position data as well.
             customerInfo customer1 = new customerInfo("Acme, Inc", "123 Main Street", "New York", "NY", "54321", "1 (800) 555-1212");
-            statementData transaction1 = new statementData("01/03/2020", "Balance Forward",  50.00, 0, 50.00);
-            statementData transaction2 = new statementData("01/13/2020", "Water", 20.00, 0, 70.00);
-            statementData transaction3 = new statementData("01/22/2020", "Electric", 110.00, 0, 180.00);
-            statementData transaction4 = new statementData("02/03/2020", "Cable", 0, 40.00, 140.00);
-            statementData transaction5 = new statementData("02/06/2020", "Phone", 50.00, 0, 190.00);
+            transactionData transaction1 = new transactionData("01/03/2020", "Balance Forward",  50.00, 0, 50.00);
+            transactionData transaction2 = new transactionData("01/13/2020", "Water", 20.00, 0, 70.00);
+            transactionData transaction3 = new transactionData("01/22/2020", "Electric", 110.00, 0, 180.00);
+            transactionData transaction4 = new transactionData("02/03/2020", "Cable", 0, 40.00, 140.00);
+            transactionData transaction5 = new transactionData("02/06/2020", "Phone", 50.00, 0, 190.00);
 
             var sw = Stopwatch.StartNew(); 
 
@@ -81,16 +128,15 @@ namespace RepeatingFormXObject
                 Console.WriteLine("Initialized the library.");
 
                 String sTemplate = Library.ResourceDirectory + "Sample_Input/DuckyAccountStatement.pdf";
-                String sOutput = "../RepeatingForm-out.pdf";
+                String sOutput = "../RepeatingForm-out-" + repeatMax + ".pdf";
 
                 if (args.Length > 0)
                     sOutput = args[0];
 
                 Console.WriteLine("Output file: " + sOutput);
-                int repeatMax = 100000;  // Record count...
 
-                // Setup the Form - the template portion of the PDF that is repeated on each page
-                // For this example, we will read this in from another document. 
+                // Setup the Form... the boilerplate portion that is repeated on each page.
+                // For this example, we will pull this from another PDF document. 
                 // Alternatively, the application could create the appropriate Text, Path and Image elements
                 // and add them to Form Content.  
                 Document sourceDoc = new Document(sTemplate);
@@ -100,8 +146,8 @@ namespace RepeatingFormXObject
                 // Create the output document
                 Document doc = new Document();
 
-                //Text t = new Text();
-                Font f = new Font("Garamond", FontCreateFlags.Embedded | FontCreateFlags.Subset);  // embedding will extend the time
+                Font fC = new Font(customerInfoFont, FontCreateFlags.Embedded | FontCreateFlags.Subset);  // will embed the font
+                Font fT = new Font(transactionDataFont, FontCreateFlags.Embedded | FontCreateFlags.Subset);  
                 GraphicState gs = new GraphicState();
                 TextState ts = new TextState();
                 Matrix m = new Matrix();
@@ -112,47 +158,35 @@ namespace RepeatingFormXObject
                 {
                     if ((i % 10000) == 0)
                     {
+                        // Every 10K, output the timer
                         Console.WriteLine("Processing record " + i);
                         Console.WriteLine("Time elapsed: " + sw.ElapsedMilliseconds + " milliseconds.");
                     }
 
                     Page docpage = doc.CreatePage(Document.LastPage, pageRect);
-                    docpage.Content.AddElement(templateForm); // add the template to the output page
+
+                    // add the template to the page
+                    docpage.Content.AddElement(templateForm); 
 
                     // add the unique content per page
                     Text t = new Text();
 
-                    // customer data
-                    m = new Matrix().Translate(120, 649).Scale(10.0, 10.0);
-                    TextRun tr = new TextRun(customer1.name, f, gs, ts, m);
-                    t.AddRun(tr);
-                    m = new Matrix().Translate(120, 635).Scale(10.0, 10.0);
-                    tr = new TextRun(customer1.address, f, gs, ts, m);
-                    t.AddRun(tr);
-                    m = new Matrix().Translate(120, 621).Scale(10.0, 10.0);
-                    String s = customer1.city + ", " + customer1.state + "   " + customer1.zip;
-                    tr = new TextRun(s, f, gs, ts, m);
-                    t.AddRun(tr);
-                    m = new Matrix().Translate(120, 607).Scale(10.0, 10.0);
-                    tr = new TextRun(customer1.phone, f, gs, ts, m);
-                    t.AddRun(tr);
+                    // call for each customer. Only 1 for the sample
+                    DisplayCustomerInfo(customer1, ref t, fC, gs, ts, customerInfoPointSize);
 
                     // transaction data - for the sample, transaction data is in fixed positions.
                     // We'll pass the start x and y. Each row is about 27 points below the prior row.
                     // Limited to 5 rows for this template.
 
-                    ProcessTransaction(37, 450, ref t, ref tr, transaction1, f, gs, ts);
-                    ProcessTransaction(37, 423, ref t, ref tr, transaction2, f, gs, ts); 
-                    ProcessTransaction(37, 396, ref t, ref tr, transaction3, f, gs, ts); 
-                    ProcessTransaction(37, 369, ref t, ref tr, transaction4, f, gs, ts); 
-                    ProcessTransaction(37, 342, ref t, ref tr, transaction5, f, gs, ts); 
+                    ProcessTransaction(transaction1, 37, 450, ref t, fT, gs, ts, transactionDataPointSize);
+                    ProcessTransaction(transaction2, 37, 423, ref t, fT, gs, ts, transactionDataPointSize); 
+                    ProcessTransaction(transaction3, 37, 396, ref t, fT, gs, ts, transactionDataPointSize); 
+                    ProcessTransaction(transaction4, 37, 369, ref t, fT, gs, ts, transactionDataPointSize); 
+                    ProcessTransaction(transaction5, 37, 342, ref t, fT, gs, ts, transactionDataPointSize); 
 
-                    // Document number at bottom of each page
+                    // Add document number at bottom of each page
                     m = new Matrix().Translate(475, 115).Scale(11.0, 11.0);
-                    tr = new TextRun("Document: ", f, gs, ts, m);
-                    t.AddRun(tr);
-                    m = new Matrix().Translate(525, 115).Scale(11.0, 11.0);
-                    tr = new TextRun(i.ToString(), f, gs, ts, m);
+                    TextRun tr = new TextRun("Document: " + i.ToString(), fC, gs, ts, m);
                     t.AddRun(tr);
                     docpage.Content.AddElement(t); 
 
@@ -164,33 +198,59 @@ namespace RepeatingFormXObject
 
                 doc.EmbedFonts(EmbedFlags.None);
                 doc.Save(SaveFlags.Full, sOutput);
+
+                // Dispose of things
+                templateForm.Dispose();
+                sourcePage.Dispose();
+                sourceDoc.Dispose();
+                doc.Dispose();
             }
+
             sw.Stop();
             TimeSpan timeElapsed = sw.Elapsed;
-            Console.WriteLine("Time elapsed: " + timeElapsed.TotalMilliseconds + " milliseconds");
+            Console.WriteLine("Document closed and saved. Total time elapsed: " + timeElapsed.TotalSeconds + " seconds");
+            Console.WriteLine("   or " + repeatMax/timeElapsed.TotalSeconds + " pages per second");
 
         }
 
 
-        static void ProcessTransaction(double x, double y, ref Text t, ref TextRun tr, statementData transaction, Font f, GraphicState gs, TextState ts)
+        static void DisplayCustomerInfo(customerInfo customer, ref Text t, Font f, GraphicState gs, TextState ts, double pointSize)
         {
-
-            double pointsize = 10.0;
+            Matrix m1 = new Matrix().Translate(customer.name_x, customer.name_y).Scale(pointSize, pointSize); // customerInfoPointSize
+            TextRun tr1 = new TextRun(customer.name, f, gs, ts, m1);
+            t.AddRun(tr1);
+            m1 = new Matrix().Translate(customer.address_x, customer.address_y).Scale(pointSize, pointSize);
+            tr1 = new TextRun(customer.address, f, gs, ts, m1);
+            t.AddRun(tr1);
+            m1 = new Matrix().Translate(customer.city_x, customer.city_y).Scale(pointSize, pointSize);
+            String s = customer.city + ", " + customer.state + "   " + customer.zip;
+            tr1 = new TextRun(s, f, gs, ts, m1);
+            t.AddRun(tr1);
+            m1 = new Matrix().Translate(customer.phone_x, customer.phone_y).Scale(pointSize, pointSize);
+            tr1 = new TextRun(customer.phone, f, gs, ts, m1);
+            t.AddRun(tr1);
+            
+            m1.Dispose();
+            tr1.Dispose();
+        }
+        static void ProcessTransaction(transactionData transaction, double x, double y, ref Text t, Font f, GraphicState gs, TextState ts, 
+            double pointSize)
+        {
             // The x position of the five elements of a transaction are
             // Date 37 9x)  Descriprtion 132 (x+95)   Charges 267 (x+230) Credits 360 (x+323)  Balance 450 (x+413)
-            Matrix m = new Matrix().Translate(x, y).Scale(pointsize, pointsize);
-            tr = new TextRun(transaction.date, f, gs, ts, m);
+            Matrix m = new Matrix().Translate(x, y).Scale(pointSize, pointSize);
+            TextRun tr = new TextRun(transaction.date, f, gs, ts, m);
             t.AddRun(tr);
-            m = new Matrix().Translate(x + 95, y).Scale(pointsize, pointsize);
+            m = new Matrix().Translate(x + 95, y).Scale(pointSize, pointSize);
             tr = new TextRun(transaction.description, f, gs, ts, m);
             t.AddRun(tr);
-            m = new Matrix().Translate(x + 230, y).Scale(pointsize, pointsize);
+            m = new Matrix().Translate(x + 230, y).Scale(pointSize, pointSize);
             tr = new TextRun(transaction.charges.ToString(), f, gs, ts, m);
             t.AddRun(tr);
-            m = new Matrix().Translate(x + 323, y).Scale(pointsize, pointsize);
+            m = new Matrix().Translate(x + 323, y).Scale(pointSize, pointSize);
             tr = new TextRun(transaction.credit.ToString(), f, gs, ts, m);
             t.AddRun(tr);
-            m = new Matrix().Translate(x + 413, y).Scale(pointsize, pointsize);
+            m = new Matrix().Translate(x + 413, y).Scale(pointSize, pointSize);
             tr = new TextRun(transaction.balance.ToString(), f, gs, ts, m);
             t.AddRun(tr);
         }
