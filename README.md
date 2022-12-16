@@ -13,6 +13,8 @@ v18.0.3 and higher. Place in \Sample_Source\Annotations
 
 ** FormWalker.cs - Walks through AcroForm field of a PDF, describing the widget annotation properties (should work for static XFA too). PGallot sample, updated with a bit more info on signature fields.  v15.0.4 and higher. Place in \Sample_Source\InformationExtraction\FormWalker
 
+** ImposeTwoPages.cs - Basic imposition sample. Imports content stream of two source pages into Form XObjects and inserts and positions them onto new, larger spread that fits both. v15.0.4 and higher. Place in \Sample_Source\ContentModification
+
 ** ModifyLinkAnnotDests.cs - Walk through the link annots and change the JS or URI Actions that contain the destination URL.   v15.0.4 and higher. Place in \Sample_Source\ContentModification\ModifyLinkAnnotDests
 
 ** PDFOptimizerSampleByteArray.java - Optimization sample that reads/writes to a byte array and uses ByteArrayInputStream and ByteArrayOutputStream.  To construct the ImageInputStream/ImageOutputStream requires v15.0.4 and higher. Place in \samples\PDFOptimizerSample folder.
