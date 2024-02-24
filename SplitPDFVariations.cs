@@ -34,7 +34,7 @@ namespace SplitPDFVariations
             bool splitByBookmarks = false;           // extract by bookmarks if they exist
                                                      // 
             bool splitByTextString = false;          // extract by specified search string
-            string splitTextString = "BREF APER�U";  //         string to search for
+            string splitTextString = "BREF APER?U";  //         string to search for
             bool splitByPageInterval = true;         // extract by specified number of page interval
             int splitPageInterval = 2;               //         page interval to use 
 
