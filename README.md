@@ -2,6 +2,9 @@
 
 APDFL DLE (mostly CSharp) samples -- Derived from demos, blogs or other sources
 
+** AddHeaderFooter.cs - Adds a haeader and footer to the first page. Uses the Page BoundingBox (or BBox) to determine the area of the page that  
+contains content and then adds the header/footer text to the areas above and below the current BBox. 
+
 ** AddTextToDocument-WithTimer.cs - Tests performance/speed of the OCRParams Performance options (Default vs. Faster vs. MoreAccuracy vs. BestAccuracy).  Unscientific test showed that the Faster option took 25%-50% of the elapsed time of BestAccuracy. v15.0.4 and higher. Place in \Sample_Source\OpticalCharacterRecognition\AddTextToDocumentWithTimer
 
 ** CheckForMissingAppearanceStreams.cs - Examine any Widget annotations (not all annots) for fields that have a missing appearance and also have a value.  v15.0.4 and higher. Place in \Sample_Source\Annotations\
@@ -12,6 +15,8 @@ APDFL DLE (mostly CSharp) samples -- Derived from demos, blogs or other sources
 v18.0.3 and higher. Place in \Sample_Source\Annotations
 
 ** FlattenTransparency-ConvertTextToCurves.cs - Converts text elements to path elements via the TransparencyFlattener feature.  Place in \Sample_Source\ContentModification
+
+** FlatTextToPDF - converts a flat text file with some PCL codes to a PDF document using a monospace font. 
 
 ** FormWalker.cs - Walks through AcroForm field of a PDF, describing the widget annotation properties (should work for static XFA too). PGallot sample, updated with a bit more info on signature fields.  v15.0.4 and higher. Place in \Sample_Source\InformationExtraction\FormWalker
 
@@ -24,3 +29,5 @@ v18.0.3 and higher. Place in \Sample_Source\Annotations
  ** RepeatingFormXObject.cs - Sample creates a Form object to hold boilerplate content that needs to be repeated on each page; and adds unique content on top for each page. For use with account statements, credit card statements, etc. Creates from 1 to N unique pages. Place in \Sample_Source\ContentCreation\RepeatingFormXObject folder.  Uses DuckyAccountStatement.pdf as the source template
 
 ** SplitPDFVariations.cs - Sample that demonstrates splitting a PDF document based on page intervals or bookmarks or by hits on key search strings.  v15.0.4 and higher.  From the blog article https://gist.github.com/datalogics-seu/4e62fd26ffcb82a30bf2458110e4b341#file-splitpdfvariations-cs
+
+** TextExtract-FromRegionsAndLinks.cs - Captures the text from specific target locations and from underneath link rectangles by checking the Word box against the target region 
