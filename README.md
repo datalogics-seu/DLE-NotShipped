@@ -14,6 +14,9 @@ contains content and then adds the header/footer text to the areas above and bel
 ** FlattenAnnotations.cs - Converts annotation appearance streams to page content. Note: Output not exactly the same; might need to be transparency flattened?
 v18.0.3 and higher. Place in \Sample_Source\Annotations
 
+** FlattenPortfolio.cs - Flatten a PDF portfolio to a standard PDF - removes attachments and inserts any PDF attachments as regular pages in the document
+
+
 ** FlattenTransparency-ConvertTextToCurves.cs - Converts text elements to path elements via the TransparencyFlattener feature.  Place in \Sample_Source\ContentModification
 
 ** FlatTextToPDF - converts a flat text file with some PCL codes to a PDF document using a monospace font. 
