@@ -16,7 +16,6 @@ v18.0.3 and higher. Place in \Sample_Source\Annotations
 
 ** FlattenPortfolio.cs - Flatten a PDF portfolio to a standard PDF - removes attachments and inserts any PDF attachments as regular pages in the document
 
-
 ** FlattenTransparency-ConvertTextToCurves.cs - Converts text elements to path elements via the TransparencyFlattener feature.  Place in \Sample_Source\ContentModification
 
 ** FlatTextToPDF - converts a flat text file with some PCL codes to a PDF document using a monospace font. 
@@ -28,7 +27,9 @@ v18.0.3 and higher. Place in \Sample_Source\Annotations
 ** ModifyLinkAnnotDests.cs - Walk through the link annots and change the JS or URI Actions that contain the destination URL.   v15.0.4 and higher. Place in \Sample_Source\ContentModification\ModifyLinkAnnotDests
 
 ** PDFOptimizerSampleByteArray.java - Optimization sample that reads/writes to a byte array and uses ByteArrayInputStream and ByteArrayOutputStream.  To construct the ImageInputStream/ImageOutputStream requires v15.0.4 and higher. Place in \samples\PDFOptimizerSample folder.
- 
+
+** RasterizeAndRunOCR.cs - For documents with pages where the content doesn't lend itself to running the OCR directly (e.g. vector objects), it can be better to rasterize the contents to an image, then OCR the image.
+  
  ** RepeatingFormXObject.cs - Sample creates a Form object to hold boilerplate content that needs to be repeated on each page; and adds unique content on top for each page. For use with account statements, credit card statements, etc. Creates from 1 to N unique pages. Place in \Sample_Source\ContentCreation\RepeatingFormXObject folder.  Uses DuckyAccountStatement.pdf as the source template
 
 ** SplitPDFVariations.cs - Sample that demonstrates splitting a PDF document based on page intervals or bookmarks or by hits on key search strings.  v15.0.4 and higher.  From the blog article https://gist.github.com/datalogics-seu/4e62fd26ffcb82a30bf2458110e4b341#file-splitpdfvariations-cs
